@@ -1,0 +1,23 @@
+module:
+  title: COCO 图像描述加载
+  name: bci_visual_analysis_prepare_coco
+  version: 1.0.0
+  desc: 加载 NSD 数据集中图像的 COCO caption 描述信息。
+  tags:
+    - nsd
+    - coco
+    - captions
+  requirements:
+    - numpy
+    - pandas
+  inputs: [ ]
+  outputs:
+    - name: prompts_list
+      desc: COCO 数据集的文本描述列表，类型为 list
+    - name: data_path
+      desc: 数据集根路径，类型为 str
+  env_params:
+    - name: PARAM_DATA_PATH
+      default_value: "/data/zx/MindBridge/data/natural-scenes-dataset"
+      title: COCO数据集路径
+      desc: COCO数据集的存储目录。

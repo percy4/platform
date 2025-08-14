@@ -1,0 +1,145 @@
+version: 1
+workflow:
+  name: 可视化分析
+  description: ""
+  nodes:
+    # ！！！任务目标！！！:
+#        1. 创建并实现模块 复制目录 modules/bci_visual_analysis_prepare_voxel2clip作为模版，命名为 bci_visual_analysis_prepare_xxx ，修改module.yaml（模块配置），实现代码 entrypoint.py（入口）
+#        2. 完成流程配置(experiment.yaml 本文件)
+#          - module 填写模块名（同时也是目录名）
+#          - name、display_name 可以一样
+#          - envs 填写模块参数（以环境变量形式传入模块中，需要对传入的环境变量进行处理）
+#          - outputs 定义dag关系的字段， 查找替换下方文本 LR模型训练/预测 并替换为 其他训练/预测
+#        3. 运行流程 python dcp-cli.py run，运行成功后 python dcp-cli.py pack 进行打包 (同时提供 pip freeze > requirements.txt)
+
+    ### 可能需要被替换的模块
+    - name: CLIP模型配置
+      kind: normal
+      display_name: CLIP模型配置
+      description:
+      envs:
+        PARAM_CLIP_VARIANT: "ViT-L/14"
+        PARAM_NORM_EMBS: "True"
+      module: bci_visual_analysis_prepare_clip
+      accepted_into_platform: true # 新增模块默认为真，计算平台将接收并导入。范例模块默认为假，不建议修改配置或源码，如需修改请说明原因。
+      outputs:
+        "0":
+          - 训练:2
+        "1":
+          - voxel2clip模型:0
+        "2":
+          - voxel2clip模型:1
+        "3":
+          - 训练:7
+
+    ### 需要被替换的模块
+    - name: voxel2clip模型
+      kind: normal
+      display_name: voxel2clip模型
+      description:
+      envs:
+        PARAM_SUBJ_LIST: "[1]"
+        PARAM_SUBJ_TARGET: "[1]"
+        PARAM_SUBJ_SOURCE: "[1]"
+        PARAM_ADAPTING: "False"
+        PARAM_H_SIZE: "512"
+        PARAM_N_BLOCKS: "2"
+        PARAM_POOL_NUM: "1024"
+      module: bci_visual_analysis_prepare_voxel2clip
+      accepted_into_platform: true # 新增模块默认为真，计算平台将接收并导入。范例模块默认为假，不建议修改配置或源码，如需修改请说明原因。
+      outputs:
+        "0":
+          - 训练:1
+        "1":
+          - 训练:8
+
+    ### 结果，需要增加结果可视化
+    #    - name: r2_score
+    #      kind: normal
+    #      display_name: r2_score
+    #      description:
+    #      envs:
+    #        PARAM_R2_SCORE_PRECISION: "2"
+    #      module: bci_cross_day_r2_score
+    #      accepted_into_platform: true # 新增模块默认为真，计算平台将接收并导入。范例模块默认为假，不建议修改配置或源码，如需修改请说明原因。
+    #
+
+    ## 请修改数据加载路径
+    - name: 初始化
+      kind: normal
+      display_name: 初始化
+      description:
+      envs:
+        PARAM_SEED: "42"
+        PARAM_MAX_LR: "0.0003"
+      module: bci_visual_analysis_config
+      accepted_into_platform: true # 新增模块默认为真，计算平台将接收并导入。范例模块默认为假，不建议修改配置或源码，如需修改请说明原因。
+      outputs:
+        "0":
+          - 训练:0
+        "1":
+          - CLIP模型配置:0
+          - voxel2clip模型:2
+          - 训练:4
+        "2":
+          - 训练:5
+    ### 请勿修改以下内容，环境变量值可修改。如有源码、模块配置调整，请提前告知
+    - name: COCO数据
+      kind: normal
+      display_name: COCO数据
+      description:
+      envs:
+        PARAM_DATA_PATH: "/data/zx/project_total/MindBridge/clip-vit-large-patch14"
+      module: bci_visual_analysis_prepare_coco
+      accepted_into_platform: true # 新增模块默认为真，计算平台将接收并导入。范例模块默认为假，不建议修改配置或源码，如需修改请说明原因。
+      outputs:
+        "0":
+          - 训练:3
+        "1":
+          - 训练:6
+    - name: 训练
+      kind: normal
+      display_name: 训练
+      description:
+      envs:
+        PARAM_MODEL_NAME: "mindbridge_subj1"
+        WANDB_MODE: "offline"
+        PARAM_BATCH_SIZE: "20"
+        PARAM_VAL_BATCH_SIZE: "20"
+        PARAM_SEED: "42"
+        PARAM_WANDB_LOG: "True"
+        PARAM_WANDB_PROJECT: "MindBridge"
+        PARAM_RESUME: "False"
+        PARAM_RESUME_ID: ""
+        PARAM_LOAD_FROM: ""
+        PARAM_NUM_WORKERS: "2"
+        PARAM_MAX_LR: "0.0003"
+        PARAM_POOL_TYPE: "max"
+        PARAM_LR_SCHEDULER_TYPE: "cycle"
+        PARAM_LENGTH: "77"
+        PARAM_USE_IMAGE_AUG: "True"
+        PARAM_CKPT_INTERVAL: "100"
+        PARAM_EVAL_INTERVAL: "100"
+        PARAM_MSE_MULT: "1000.0"
+        PARAM_REC_MULT: "0.0"
+        PARAM_CYC_MULT: "0.0"
+        PARAM_AUTOENCODER_NAME: "None"
+        PARAM_SUBJ_LOAD: "None"
+        PARAM_SUBJ_TEST: "1"
+        PARAM_SAMPLES: "None"
+        PARAM_IMG2IMG_STRENGTH: "0.85"
+        PARAM_GUIDANCE_SCALE: "3.5"
+        PARAM_NUM_INFERENCE_STEPS: "20"
+        PARAM_RECONS_PER_SAMPLE: "16"
+        PARAM_PLOTTING: "True"
+        PARAM_VD_CACHE_DIR: "../weights"
+        PARAM_CKPT_FROM: "last"
+        PARAM_TEXT_IMAGE_RATIO: "0.5"
+        PARAM_TEST_START: "0"
+        PARAM_TEST_END: "None"
+      module: bci_visual_analysis_trainer
+      accepted_into_platform: true # 新增模块默认为真，计算平台将接收并导入。范例模块默认为假，不建议修改配置或源码，如需修改请说明原因。
+#      outputs:
+#        "0":
+#          - r2_score:0
+

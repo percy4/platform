@@ -1,0 +1,30 @@
+module:
+  title: 初始化训练配置
+  name: bci_visual_analysis_config
+  version: 1.0.0
+  desc: 初始化训练所需的随机种子、多进程配置、学习率等参数。
+  tags:
+    - config
+    - accelerate
+  requirements:
+    - accelerate
+    - torch
+  inputs: [ ]
+  outputs:
+    - name: accelerator
+      desc: accelerate 加速器对象，类型为 accelerate.Accelerator
+    - name: device
+      desc: 训练设备对象，类型为 torch.device
+    - name: local_rank
+      desc: 本地进程rank，类型为 int
+    - name: args
+      desc: 参数对象，包含随机种子和最大学习率，类型为 types.SimpleNamespace
+  env_params:
+    - name: PARAM_SEED
+      default_value: "42"
+      title: 随机种子
+      desc: 控制训练的随机性，确保可复现。
+    - name: PARAM_MAX_LR
+      default_value: "0.0003"
+      title: 最大学习率
+      desc: 训练时的最大初始学习率。

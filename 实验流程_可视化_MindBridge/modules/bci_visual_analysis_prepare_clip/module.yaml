@@ -1,0 +1,32 @@
+module:
+  title: CLIP模型初始化
+  name: bci_visual_analysis_prepare_clip
+  version: 1.0.0
+  desc: 加载 CLIP 模型并设置特征维度参数。
+  tags:
+    - clip
+    - vision
+  requirements:
+    - open_clip_torch
+    - torch
+  inputs:
+    - name: device
+      desc: 训练设备对象，类型为 torch.device
+  outputs:
+    - name: clip_extractor
+      desc: CLIP 特征提取器对象，类型为 Clipper
+    - name: out_dim_image
+      desc: 图像特征维度，类型为 int
+    - name: out_dim_text
+      desc: 文本特征维度，类型为 int
+    - name: args
+      desc: 参数对象，包含clip_variant等配置，类型为 types.SimpleNamespace
+  env_params:
+    - name: PARAM_CLIP_VARIANT
+      default_value: "ViT-L/14"
+      title: CLIP 模型变体
+      desc: 指定使用的 CLIP 模型版本，如 ViT-L/14。
+    - name: PARAM_NORM_EMBS
+      default_value: "True"
+      title: 是否归一化嵌入向量
+      desc: 是否对 CLIP 特征进行归一化处理。

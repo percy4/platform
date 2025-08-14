@@ -1,0 +1,61 @@
+module:
+  title: 模型训练执行模块
+  name: bci_visual_analysis_trainer
+  version: 1.0.0
+  desc: 执行训练主流程，调用 Trainer 类进行神经解码模型训练。
+  tags:
+    - training
+    - trainer
+  requirements:
+    - torch
+    - wandb
+    - numpy
+  inputs:
+    - name: input_0
+      desc: accelerator 对象
+    - name: input_1
+      desc: voxel2clip 模型
+    - name: input_2
+      desc: clip_extractor 对象
+    - name: input_3
+      desc: prompts_list
+    - name: input_4
+      desc: device
+    - name: input_5
+      desc: local_rank 整数
+    - name: input_6
+      desc: data_path 数据目录
+    - name: input_7
+      desc: model_config 模型配置
+    - name: input_8
+      desc: mapper_config 映射器配置
+  outputs: [ ]
+  env_params:
+    - name: PARAM_MODEL_NAME
+      default_value: "mindbridge_subj1"
+      title: 模型名称
+      desc: 用于保存与记录的模型名称
+    - name: PARAM_WANDB_MODE
+      default_value: "offline"
+      title: wandb 模式
+      desc: 日志记录方式（offline / online）
+    - name: PARAM_BATCH_SIZE
+      default_value: "20"
+      title: 批大小
+      desc: 每批训练样本数量
+    - name: PARAM_MAX_LR
+      default_value: "0.0003"
+      title: 最大学习率
+      desc: 初始学习率
+    - name: PARAM_EVAL_INTERVAL
+      default_value: "100"
+      title: 评估间隔
+      desc: 训练过程中每多少步进行一次评估
+    - name: PARAM_IMG2IMG_STRENGTH
+      default_value: "0.85"
+      title: 图像生成强度
+      desc: 图像增强参数
+    - name: PARAM_GUIDANCE_SCALE
+      default_value: "3.5"
+      title: 文本图像引导强度
+      desc: 控制文本与图像生成之间的平衡

@@ -1,0 +1,62 @@
+module:
+  title: 构建MindBridge脑解码网络
+  name: bci_visual_analysis_prepare_mindbridge
+  version: 1.0.0
+  desc: 构建用于神经解码的 MindBridge 模型。
+  tags:
+    - mindbridge
+    - voxel2clip
+    - brain-decoding
+  requirements:
+    - torch
+  inputs:
+    - name: accelerator
+      desc: accelerate 加速器对象，类型为 accelerate.Accelerator
+    - name: voxel2clip
+      desc: voxel2clip模型对象，类型为 torch.nn.Module
+    - name: clip_extractor
+      desc: CLIP 特征提取器，类型为 Clipper
+    - name: prompts_list
+      desc: COCO数据集文本描述列表，类型为 list
+    - name: device
+      desc: 训练设备对象，类型为 torch.device
+    - name: local_rank
+      desc: 本地进程rank，类型为 int
+    - name: data_path
+      desc: 数据集根路径，类型为 str
+    - name: model_config
+      desc: 模型配置参数，类型为 types.SimpleNamespace
+    - name: mapper_config
+      desc: Mapper配置参数，类型为 types.SimpleNamespace
+  outputs:
+    - name: output_0
+      desc: 空列表，训练完成后返回，类型为 list
+  env_params:
+    - name: PARAM_SUBJ_LIST
+      default_value: "[1]"
+      title: 被试列表
+      desc: 参与实验的被试编号列表。
+    - name: PARAM_SUBJ_TARGET
+      default_value: "[1]"
+      title: 目标被试
+      desc: 适配时的目标被试编号。
+    - name: PARAM_SUBJ_SOURCE
+      default_value: "[1]"
+      title: 源被试列表
+      desc: 适配时的源被试编号列表。
+    - name: PARAM_ADAPTING
+      default_value: "False"
+      title: 是否进行模型适配
+      desc: 指示是否进行模型微调或适配。
+    - name: PARAM_H_SIZE
+      default_value: "512"
+      title: 隐藏层大小
+      desc: 模型隐藏层大小。
+    - name: PARAM_N_BLOCKS
+      default_value: "2"
+      title: Transformer块数
+      desc: Transformer层数。
+    - name: PARAM_POOL_NUM
+      default_value: "1024"
+      title: 输入维度大小
+      desc: 输入特征维度。
