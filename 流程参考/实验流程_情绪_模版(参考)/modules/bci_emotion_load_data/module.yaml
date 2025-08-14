@@ -1,0 +1,35 @@
+module:
+  title: 情绪数据加载
+  name: bci_emotion_load_data
+  version: 1.0.0
+  desc: 模块功能说明
+  tags:
+    - emotion
+  requirements:
+    - scikit-learn
+    - numpy
+  inputs: [ ]
+  outputs:
+    - name: data
+      desc: 情绪数据，类型为numpy.ndarray
+  env_params:
+    - name: PARAM_LOAD_PATH
+      default_value: "processed_data"
+      title: 数据加载路径
+      desc: 填写绝对路径
+    - name: PARAM_NUM_SUBS
+      default_value: 5
+      title: 受试者数量
+      desc: 试验中的受试者总数
+    - name: PARAM_NUM_TRIALS
+      default_value: 28
+      title: 试验次数
+      desc: 每个受试者的试验次数
+    - name: PARAM_NUM_CHANNELS
+      default_value: 32
+      title: 数据通道数
+      desc: 每个试验的数据通道数量
+    - name: PARAM_NUM_TIMEPOINTS
+      default_value: 7500  # 250 * 30
+      title: 采样点数量
+      desc: 每个试验的时间点数（30秒，每秒250个点）

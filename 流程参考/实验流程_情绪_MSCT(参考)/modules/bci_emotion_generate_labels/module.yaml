@@ -1,0 +1,26 @@
+module:
+  title: 情绪数据生成标签
+  name: bci_emotion_generate_labels
+  version: 1.0.0
+  desc: 模块功能说明
+  tags:
+    - emotion
+  requirements:
+    - scikit-learn
+    - numpy==1.26.4
+  inputs:
+    - name: slice_data
+      desc: 情绪分片数据，类型为numpy.ndarray
+  outputs:
+    - name: labels
+      desc: 情绪标签，类型为numpy.ndarray
+  env_params:
+    - name: PARAM_NUM_NEGATIVE
+      default_value: "4"
+      title: 负类数量（num_negative）
+      desc: 指定负类的类别数量，通常对应于类别编号为 0 至 num_negative-1 的类别。
+
+    - name: PARAM_NUM_POSITIVE
+      default_value: "4"
+      title: 正类数量（num_positive）
+      desc: 指定正类的类别数量，通常对应于类别编号为 num_negative+1 至 num_negative+num_positive 的类别。

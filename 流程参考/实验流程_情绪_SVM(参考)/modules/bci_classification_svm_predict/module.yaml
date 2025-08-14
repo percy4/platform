@@ -1,0 +1,21 @@
+module:
+  title: SVM分类器预测模块
+  name: bci_classification_svm_predict
+  version: 1.0.0
+  desc: 模块功能说明
+  tags:
+    - 分类
+    - SVM
+    - 测试
+  requirements:
+    - scikit-learn
+    - numpy
+  inputs:
+    - name: model
+      desc: 分类模型，类型为object
+    - name: data
+      desc: 输入数据，类型为numpy.ndarray
+  outputs:
+    - name: result
+      desc: 预测结果，类型为numpy.ndarray
+  env_params: [ ]

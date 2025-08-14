@@ -1,0 +1,23 @@
+module:
+  title: 训练SVM模型
+  name: bci_emotion_svm_fit
+  version: 1.0.0
+  desc: 模块功能说明
+  tags:
+    - emotion
+  requirements:
+    - scikit-learn
+    - numpy
+  inputs:
+    - name: x_train
+      desc: x_train，类型为numpy.ndarray
+    - name: y_train
+      desc: y_train，类型为numpy.ndarray
+  outputs:
+    - name: model
+      desc: 分类模型，类型为sklearn.svm
+  env_params:
+    - name: PARAM_SVC_KERNEL
+      default_value: "linear"
+      title: kernel
+      desc: "{'linear', 'poly', 'rbf', 'sigmoid', 'precomputed'}"

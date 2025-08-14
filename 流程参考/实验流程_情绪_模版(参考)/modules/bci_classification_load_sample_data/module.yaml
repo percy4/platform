@@ -1,0 +1,27 @@
+module:
+  title: 分类训练测试数据
+  name: bci_classification_load_sample_data
+  version: 1.0.0
+  desc: 模块功能说明
+  tags:
+    - 分类
+    - sample
+    - load_data
+  requirements:
+    - scikit-learn
+    - numpy
+  inputs: [ ]
+  outputs:
+    - name: neural_data
+      desc: 神经数据，类型为 numpy.ndarray
+    - name: target
+      desc: 标签数据，类型为 numpy.ndarray
+  env_params:
+    - name: INPUT_MAT_PATH
+      default_value: ""
+      title: 数据路径
+      desc: "{training|testing}/NeuralData{data_id}.mat"
+    - name: INPUT_LABEL_TXT_PATH
+      default_value: ""
+      title: 标签路径
+      desc: "{training|testing}/label{data_id}.txt"

@@ -1,0 +1,21 @@
+module:
+  title: MSCT分类器预测模块
+  name: bci_emotion_MSCT_predict
+  version: 1.0.0
+  desc:
+  tags:
+    - emotion
+    - MSCT
+    - 预测
+  requirements:
+    - torch
+    - numpy==1.26.4
+  inputs:
+    - name: model
+      desc: 分类模型，类型为MSCT_fit.entrypoint.MSCT
+    - name: x_test
+      desc: x_test，类型为numpy.ndarray
+  outputs:
+    - name: y_pred
+      desc: 预测数据y_pred，类型为numpy.ndarray
+  env_params: [ ]

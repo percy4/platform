@@ -1,0 +1,54 @@
+module:
+  title: MSCT分类器训练模块
+  name: bci_emotion_MSCT_fit
+  version: 1.0.0
+  desc:
+  tags:
+    - emotion
+    - MSCT
+    - 训练
+  requirements:
+    - torch
+    - numpy==1.26.4
+    - einops
+  inputs:
+    - name: x_train
+      desc: x_train，类型为numpy.ndarray
+    - name: y_train
+      desc: y_train，类型为numpy.ndarray
+  outputs:
+    - name: model
+      desc: 分类模型，类型为MSCT_fit.entrypoint.MSCT
+  env_params:
+    - name: INPUT_PARAM_TRAIN_EPOCH
+      default_value: "50"
+      title: 参数 TRAIN_EPOCH 数值
+      desc: MSCT 训练参数 TRAIN_EPOCH
+    - name: INPUT_PARAM_BATCH_SIZE
+      default_value: "64"
+      title: 参数 BATCH_SIZE 数值
+      desc: MSCT 训练参数 BATCH_SIZE
+    - name: INPUT_PARAM_LEARNING_RATE
+      default_value: "0.0005"
+      title: 参数 LEARNING_RATE 数值
+      desc: MSCT 训练参数 LEARNING_RATE
+    - name: INPUT_PARAM_WEIGHT_DECAY
+      default_value: "0.005"
+      title: 参数 WEIGHT_DECAY 数值
+      desc: MSCT 训练参数 WEIGHT_DECAY
+    - name: INPUT_PARAM_FREQUENCY
+      default_value: "250"
+      title: 参数 FREQUENCY 数值
+      desc: MSCT 训练参数 FREQUENCY
+    - name: INPUT_PARAM_TIME_FILTER_LENS
+      default_value: "[90,60,30,15,5]"
+      title: 参数 TIME_FILTER_LENS 数值
+      desc: MSCT 训练参数 TIME_FILTER_LENS
+    - name: INPUT_PARAM_TRANSFORMER_DEPTH
+      default_value: "4"
+      title: 参数 TRANSFORMER_DEPTH 数值
+      desc: MSCT 训练参数 TRANSFORMER_DEPTH
+    - name: INPUT_PARAM_NUM_CLASSES
+      default_value: "9"
+      title: 参数 NUM_CLASSES 数值
+      desc: MSCT 训练参数 NUM_CLASSES

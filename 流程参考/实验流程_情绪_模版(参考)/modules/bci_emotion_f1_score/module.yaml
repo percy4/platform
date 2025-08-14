@@ -1,0 +1,23 @@
+module:
+  title: 情绪数据拆分
+  name: bci_emotion_slice_data
+  version: 1.0.0
+  desc: 模块功能说明
+  tags:
+    - emotion
+  requirements:
+    - scikit-learn
+    - numpy
+  inputs:
+    - name: y_test
+      desc: 测试数据，类型为numpy.ndarray
+    - name: y_pred
+      desc: 预测数据，类型为numpy.ndarray
+  outputs:
+    - name: f1分数
+      desc: f1分数，类型为sklearn.svm
+  env_params:
+    - name: PARAM_AVERAGE
+      default_value: macro
+      title: "F1 Score 平均计算方法"
+      desc: "指定计算 F1 分数的方法。可选值包括 'micro'、'macro'、'weighted' 或 None。'micro' 方法通过计算总的真正例、假负例和假正例来全局计算指标；'macro' 方法针对每个标签计算指标，并求其未加权平均值；'weighted' 方法针对每个标签计算指标，并考虑每个标签的真实实例数量，求其加权平均值。设置为 None 将返回每个类别的分数。"

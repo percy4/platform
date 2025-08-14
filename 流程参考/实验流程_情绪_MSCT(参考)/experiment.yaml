@@ -1,0 +1,121 @@
+version: 1
+workflow:
+  name: 情绪实验流程
+  description: ""
+  nodes:
+    # ！！！任务目标！！！:
+    #    1. 创建并实现模块 复制目录 modules/bci_module_template作为模版，填写module.yaml（模块配置），实现代码 entrypoint.py（入口）
+    #    2. 完成流程配置(experiment.yaml)
+    #      - module 填写模块名（同时也是目录名）
+    #      - name、display_name 可以一样
+    #      - envs 填写模块参数（以环境变量形式传入模块中，需要对传入的环境变量进行处理）
+    #      - outputs 定义dag关系的字段， 查找替换下方文本 训练SVM模型、SVM预测 并替换为 训练XX模型、XX预测
+    #    3. 运行流程 python dcp-cli.py run，运行成功后 python dcp-cli.py pack 进行打包 (同时提供 pip freeze > requirements.txt)
+    # 流程、模块详细说明，请查看 接入说明PDF
+
+    # 需要实现的模块
+    - name: 训练MSCT模型
+      kind: normal
+      display_name: 训练MSCT模型
+      description:
+      envs:
+        INPUT_PARAM_TRAIN_EPOCH: "50"
+        INPUT_PARAM_BATCH_SIZE: "64"
+        INPUT_PARAM_LEARNING_RATE: "0.0005"
+        INPUT_PARAM_WEIGHT_DECAY: "0.005"
+        INPUT_PARAM_FREQUENCY: "250"
+        INPUT_PARAM_TIME_FILTER_LENS: "[90, 60, 30, 15, 5]"
+        INPUT_PARAM_TRANSFORMER_DEPTH: "4"
+        INPUT_PARAM_NUM_CLASSES: "9"
+      module: bci_emotion_MSCT_fit # 复制目录modules/bci_module_template 并命名为需要实现的模块 bci_emotion_xxx_fit 放到 modules目录下
+      accepted_into_platform: true # 新增模块默认为真，计算平台将接收并导入。范例模块默认为假，不建议修改配置或源码，如需修改请说明原因。
+      outputs:
+        "0":
+          - MSCT预测:0
+    # 需要实现的模块
+    - name: MSCT预测
+      kind: normal
+      display_name: MSCT预测
+      description:
+      envs: { }
+      module: bci_emotion_MSCT_predict # 复制目录modules/bci_module_template 并命名为需要实现的模块 bci_emotion_xxx_pred 放到 modules目录下
+      accepted_into_platform: true # 新增模块默认为真，计算平台将接收并导入。范例模块默认为假，不建议修改配置或源码，如需修改请说明原因。
+      outputs:
+        "0":
+          - 计算准确率:1
+          - 计算F1分数:1
+
+
+    - name: 数据加载
+      kind: normal
+      display_name: 数据加载
+      description:
+      envs:
+        PARAM_LOAD_PATH: "/Users/ghostw/Code/dcp-dag-export-demo/demo_emotion/emotion/processed_data"
+        PARAM_NUM_SUBS: "5"
+        PARAM_NUM_TRIALS: "28"
+        PARAM_NUM_CHANNELS: "32"
+        PARAM_NUM_CLASSES: "9"
+        PARAM_NUM_FREQUENCY: "250"
+        PARAM_NUM_TIMEPOINTS: "7500"
+      module: bci_emotion_load_data
+      accepted_into_platform: true # 新增模块默认为真，计算平台将接收并导入。范例模块默认为假，不建议修改配置或源码，如需修改请说明原因。
+      outputs:
+        "0":
+          - 数据切片:0
+    - name: 数据切片
+      kind: normal
+      display_name: 数据切片
+      description:
+      envs:
+        PARAM_WINDOW: "1250"
+        PARAM_STEP: "1250"
+      module: bci_emotion_slice_data
+      accepted_into_platform: true # 新增模块默认为真，计算平台将接收并导入。范例模块默认为假，不建议修改配置或源码，如需修改请说明原因。
+      outputs:
+        "0":
+          - 生成标签:0
+          - 划分数据集:0
+    - name: 生成标签
+      kind: normal
+      display_name: 生成标签
+      description:
+      envs: { }
+      module: bci_emotion_generate_labels
+      accepted_into_platform: true # 新增模块默认为真，计算平台将接收并导入。范例模块默认为假，不建议修改配置或源码，如需修改请说明原因。
+      outputs:
+        "0":
+          - 划分数据集:1
+    - name: 划分数据集
+      kind: normal
+      display_name: 划分数据集
+      description:
+      envs: { }
+      module: bci_emotion_split_data
+      accepted_into_platform: true # 新增模块默认为真，计算平台将接收并导入。范例模块默认为假，不建议修改配置或源码，如需修改请说明原因。
+      outputs:
+        "0":
+          - 训练MSCT模型:0
+        "1":
+          - 训练MSCT模型:1
+        "2":
+          - MSCT预测:1
+        "3":
+          - 计算准确率:0
+          - 计算F1分数:0
+    - name: 计算准确率
+      kind: normal
+      display_name: 计算准确率
+      description:
+      envs: { }
+      module: bci_emotion_accuracy_score
+      accepted_into_platform: true # 新增模块默认为真，计算平台将接收并导入。范例模块默认为假，不建议修改配置或源码，如需修改请说明原因。
+    - name: 计算F1分数
+      kind: normal
+      display_name: 计算F1分数
+      description:
+      envs:
+        PARAM_AVERAGE: 'macro'
+      module: bci_emotion_f1_score
+      accepted_into_platform: true # 新增模块默认为真，计算平台将接收并导入。范例模块默认为假，不建议修改配置或源码，如需修改请说明原因。
+

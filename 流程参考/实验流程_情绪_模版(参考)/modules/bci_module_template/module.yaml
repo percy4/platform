@@ -1,0 +1,38 @@
+module:
+  title: 模块模版 # 模块名称
+  name: bci_module_template # 与模块目录同名
+  version: 1.0.0 # 版本
+  desc: 模块功能说明 # 说明
+  tags: # TODO 补列表
+    - sample
+  requirements: # 按requirements.txt格式 逐行写入
+    - numpy==1.26
+    - torch
+    - ./some_lib.whl # 把相应whl文件放入模块目录， {流程目录}/modules/bci_module_template/some_lib.whl
+  inputs:
+    - name: input_0
+      desc: 输入数据0，类型为 numpy.ndarray
+    - name: input_1
+      desc: 输入数据1，类型为 int
+  outputs:
+    - name: output_0
+      desc: 神经数据，类型为 numpy.ndarray
+    - name: output_1
+      desc: 标签数据，类型为 int
+  env_params:
+    - name: INPUT_STRING
+      default_value: ""
+      title: 文本参数
+      desc: 文本参数说明
+    - name: INPUT_INT
+      default_value: "0"
+      title: 数字参数
+      desc: 数字参数说明
+    - name: INPUT_FLOAT
+      default_value: "1.23"
+      title: 浮点参数
+      desc: 浮点参数说明
+    - name: INPUT_BOOL
+      default_value: "True"
+      title: 布尔参数
+      desc: 布尔参数说明

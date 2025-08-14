@@ -1,0 +1,26 @@
+module:
+  title: 情绪数据滑动窗口切片
+  name: bci_emotion_slice_data
+  version: 1.0.0
+  desc: 模块功能说明
+  tags:
+    - emotion
+  requirements:
+    - scikit-learn
+    - numpy==1.26.4
+  inputs:
+    - name: data
+      desc: 情绪数据，类型为numpy.ndarray
+  outputs:
+    - name: slice_data
+      desc: 情绪分片数据，类型为numpy.ndarray
+  env_params:
+    - name: PARAM_WINDOW
+      default_value: "1250"
+      title: 滑动窗口大小
+      desc: 单位为采样点，表示每个数据窗口的长度。例如，250 表示 1 秒窗口（若采样率为 250Hz）
+
+    - name: PARAM_STEP
+      default_value: "1250"
+      title: 滑动步长
+      desc: 单位为采样点，表示窗口每次滑动的步长。与窗口大小相同表示无重叠窗口，值小于窗口大小表示重叠滑动
